@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Messages</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #ddd;
+        }
+        .card {
+            transition: transform 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: scale(1.03);
+        }
+        .card-text {
+            height: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+
+    <h1 class="text-center mb-4">All Messages</h1>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row">
+        {% for m in messages %}
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    {% if m.photo %}
+                        <img src="{{ url_for('static', filename=m.photo.split('static/')[-1]) }}"
+                             class="card-img-top" alt="Message image">
+                    {% else %}
+                        <img src="https://via.placeholder.com/300x200?text=No+Image"
+                             class="card-img-top" alt="No image">
+                    {% endif %}
+
+                    <div class="card-body text-center">
+                        <p class="card-text">{{ m.text }}</p>
+                        <div class="d-flex justify-content-between mt-2">
+                            <a href="{{ url_for('messages.view_photo', id=m.id) }}" class="btn btn-outline-primary btn-sm">View</a>
+                            <a href="{{ url_for('messages.decrypted_message', id=m.id) }}" class="btn btn-warning btn-sm">Decrypting</a>
+                            <form action="{{ url_for('messages.delete_message', id=m.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure you want to delete this message?');">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('messages.encrypted_message') }}" class="btn btn-success">Add New Message</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
