@@ -5,28 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Message</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .result-container {
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        .preview-img {
+            max-height: 300px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Message #{{ message.id }}</h1>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">View Encrypted Message</h1>
 
-    <div class="card mx-auto shadow" style="max-width: 600px;">
-        {% if message.photo %}
-            <img src="{{ url_for('static', filename=message.photo.split('static/')[-1]) }}"
-                 class="card-img-top" alt="Message Image">
-        {% else %}
-            <img src="https://via.placeholder.com/600x400?text=No+Image" class="card-img-top" alt="No image">
-        {% endif %}
-        <div class="card-body">
-            <p class="card-text">{{ message.text }}</p>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- View Result -->
+        <div class="card result-container shadow">
+            <div class="card-body">
+                <h5 class="card-title">Encrypted Image</h5>
+                {% if message and message.photo %}
+                    <img src="{{ url_for('static', filename=message.photo.split('static/')[-1]) }}"
+                         class="img-fluid preview-img mx-auto d-block" alt="Encrypted Image">
+                {% else %}
+                    <img src="https://via.placeholder.com/600x400?text=No+Image"
+                         class="img-fluid preview-img mx-auto d-block" alt="No Image">
+                {% endif %}
+                <p class="card-text fs-5">
+                    <strong>Encrypted Text Placeholder:</strong>
+                    {% if message.text %}
+                        {{ message.text }}
+                    {% else %}
+                        <span class="text-muted">No text placeholder.</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('messages.index') }}" class="btn btn-secondary">Back to All Messages</a>
+            <a href="{{ url_for('messages.decrypt', id=message.id) }}" class="btn btn-primary">Decrypt Message</a>
         </div>
     </div>
 
-    <div class="text-center mt-4">
-        <a href="{{ url_for('messages.index') }}" class="btn btn-secondary">Back to All Messages</a>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+```
