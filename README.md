@@ -94,8 +94,9 @@ steganography-web-app/
 ├── templates/
 │   ├── index.html       # Main page for uploading image and message
 │   ├── decrypted.html   # Page to display decoded message
-│   └── encrypted.html   # Page to display encoding result
-├── db_config.py
+│   ├── encrypted.html   # Page to display encoding result
+│   └── view.html
+├── db_config.py 
 ├── forms.py
 ├── message_repository.py
 ├── message_service.py   # Core steganography and message management logic
