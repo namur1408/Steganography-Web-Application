@@ -1,6 +1,6 @@
-import os
 from flask import flash, redirect, url_for, Blueprint, render_template
 from forms import MessageForm
+from models import Message
 from message_repository import MessageRepository
 from message_service import MessageManager, SteganographyManager
 
@@ -36,7 +36,7 @@ def view_photo(id):
 
 @message_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_message(id):
-    message = repo.get_by_id(id)
+    message = Message.query.get_or_404(id)
     try:
         message_service.delete_message(message)
         flash('Message deleted successfully', 'success')
