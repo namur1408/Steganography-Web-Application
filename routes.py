@@ -27,12 +27,10 @@ def encrypted_message():
             flash(f'Error while saving message: {str(e)}', 'danger')
     return render_template('encrypted.html', form=form)
 
-
 @message_bp.route('/view/<int:id>')
 def view_photo(id):
     message = repo.get_by_id(id)
     return render_template('view.html', message=message)
-
 
 @message_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_message(id):
@@ -44,8 +42,16 @@ def delete_message(id):
         flash(f'Error while deleting: {str(e)}', 'danger')
     return redirect(url_for('messages.index'))
 
-
-@message_bp.route('/decrypting')
-def decrypted_message():
-    flash('Message has been decrypted.')
-    return render_template('decrypted.html')
+@message_bp.route('/decrypt/<int:id>')
+def decrypt(id):
+    message = repo.get_by_id(id)
+    if not message:
+        flash('Message not found.', 'danger')
+        return redirect(url_for('messages.index'))
+    try:
+        decoded_message = encryption_service.decrypt_message(message.photo)
+        flash('Message has been decrypted.', 'success')
+        return render_template('decrypted.html', message=message, decoded_message=decoded_message)
+    except Exception as e:
+        flash(f'Error while decrypting message: {str(e)}', 'danger')
+        return redirect(url_for('messages.view_photo', id=id))
