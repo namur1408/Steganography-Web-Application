@@ -24,7 +24,7 @@ Create a directory named static/photo in the project root to store uploaded and 
 
 4. Open your browser and go to the link that was given to you
 ## How it works
-Steganography is a way to hide secret information inside normal-looking files — usually pictures. The main idea is that you can slightly change the pixels of an image in a way that the human eye can’t notice, but a computer can still read those small changes and recover the hidden message.
+Steganography is a way to hide secret information inside normal-looking files usually pictures. The main idea is that you can slightly change the pixels of an image in a way that the human eye can’t notice, but a computer can still read those small changes and recover the hidden message.
 
 Every image is made of pixels, and each pixel has three color values: red (R), green (G), and blue (B).
 
@@ -57,7 +57,7 @@ we would make it look like this:
 (120, 65, 200)
 ```
 After repeating this process for all the bits, the image now secretly contains the binary code for “Hi”.
-To anyone looking at it, it’s the same image — but a program that knows the rules can extract the message.
+To anyone looking at it, it’s the same image but a program that knows the rules can extract the message.
 
 Decoding
 To read the hidden text, we go backward:
